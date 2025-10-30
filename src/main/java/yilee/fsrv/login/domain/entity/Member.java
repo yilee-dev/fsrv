@@ -54,7 +54,7 @@ public class Member {
 
     public void addRole(MemberRole... roles) {
         // Set Data Structure
-        if (roles != null || roles.length == 0) return;
+        if (roles == null || roles.length == 0) return;
         EnumSet<MemberRole> validRoles = Arrays.stream(roles)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(MemberRole.class)));

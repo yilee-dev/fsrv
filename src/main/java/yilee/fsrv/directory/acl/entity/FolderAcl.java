@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import yilee.fsrv.directory.acl.enums.FolderPermission;
 import yilee.fsrv.directory.folder.domain.entity.FolderObject;
+import yilee.fsrv.login.domain.entity.Member;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "folder_acl",
@@ -14,7 +17,8 @@ import yilee.fsrv.directory.folder.domain.entity.FolderObject;
         indexes = {
                 @Index(name = "idx_acl_folder", columnList = "folder_id"),
                 @Index(name = "idx_acl_subject", columnList = "subject_id"),
-                @Index(name = "idx_acl_permission", columnList = "permission")
+                @Index(name = "idx_acl_permission", columnList = "permission"),
+                @Index(name = "idx_acl_folder_subject", columnList = "folder_id, subject_id")
         }
 )
 @Getter @EqualsAndHashCode(of = "id")
@@ -32,7 +36,27 @@ public class FolderAcl {
     @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 
+    @Column(name = "granted_by_id")
+    private Long grantedBy;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private FolderPermission permission;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    private void onCreate() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+    }
+
+    public static FolderAcl of(FolderObject folder, Long subjectId, FolderPermission p, Long grantedBy) {
+        return FolderAcl.builder()
+                .folder(folder)
+                .subjectId(subjectId)
+                .permission(p)
+                .grantedBy(grantedBy)
+                .build();
+    }
 }
