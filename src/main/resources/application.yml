@@ -1,8 +1,12 @@
+server:
+  port: 8081
+  address: 10.117.9.41
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/fsrv
     username: root
-    password: yiLee839195!
+    password: DHD@ngh222
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -17,6 +21,9 @@ spring:
     multipart:
       max-file-size: 2GB
       max-request-size: 4GB
+
+  messages:
+    basename: messages,errors
 
 file:
   store:
